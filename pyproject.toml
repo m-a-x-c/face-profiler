@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "face-profiler"
+version = "0.1.0"
+description = "Face detection and attribute analysis (age, gender, race) using MiVOLO v2 + FairFace + RetinaFace"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "deepface",
+    "tf-keras",
+    "pillow",
+    "torch",
+    "torchvision",
+    "transformers",
+    "accelerate",
+    "gdown",
+    "opencv-python",
+    "timm==0.8.13.dev0",
+]
+
+[project.scripts]
+face-profiler = "face_profiler.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["face_profiler*", "mivolo*"]
+
+[tool.setuptools.package-data]
+face_profiler = ["icon.ico"]

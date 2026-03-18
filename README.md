@@ -2,7 +2,71 @@
 
 ![Face Profiler Demo](demo.jpg)
 
-GUI application for face detection and facial attribute analysis (age, gender, race) using MiVOLO v2 + FairFace + RetinaFace.
+Face detection and demographic analysis (age, gender, race) using MiVOLO v2 + FairFace + RetinaFace. Use it as a **Python library**, from the **command line**, or through the **GUI demo**. All inference runs locally.
+
+## Quick start
+
+```shell
+pip install -e .
+```
+
+### Python library
+
+```python
+from face_profiler import FaceProfiler
+
+profiler = FaceProfiler()          # device auto-detected; models load lazily
+results = profiler.analyze("photo.jpg")
+
+for face in results:
+    print(f"{face['gender']}, age {face['age']:.0f} ({face['age_range']}), {face['race']}")
+
+# Save an annotated image with boxes and info cards
+annotated = profiler.render("photo.jpg")
+annotated.save("output.jpg")
+```
+
+Each result dict contains:
+
+```python
+{
+    "box": (x1, y1, x2, y2),
+    "confidence": 0.98,
+    "age": 24.3,
+    "age_range": "18-25",
+    "gender": "Female",
+    "gender_confidence": 97.2,
+    "race": "East Asian",
+    "race_distribution": {"White": 2.1, "Black": 0.3, ...},
+}
+```
+
+### Command line
+
+```shell
+face-profiler photo.jpg              # JSON output
+face-profiler photo.jpg --text       # Human-readable output
+face-profiler photo.jpg --annotate output.jpg
+face-profiler photo.jpg --device cpu
+face-profiler --gui                  # Launch the GUI demo
+```
+
+Or via module:
+
+```shell
+python -m face_profiler photo.jpg
+python -m face_profiler --gui
+```
+
+### GUI demo
+
+```shell
+face-profiler --gui
+```
+
+- **RANDOM IMAGE** — picks a random image from the current folder and analyzes it
+- **PICK IMAGE** — opens a file picker to select any image from anywhere on disk
+- **CHANGE FOLDER** — switch the image folder (default is `images/`)
 
 ## Setup
 
@@ -25,17 +89,16 @@ venv\Scripts\activate.bat
 source venv/bin/activate
 ```
 
-### 2. Install dependencies
+### 2. Install
+
+```shell
+pip install -e .
+```
+
+Or install dependencies manually:
 
 ```shell
 pip install -r requirements.txt
-```
-
-Or manually:
-
-```shell
-pip install deepface tf-keras pillow torch torchvision transformers accelerate gdown opencv-python
-pip install timm==0.8.13.dev0
 ```
 
 **Important:** MiVOLO requires `timm==0.8.13.dev0` specifically. Newer versions will not work.
@@ -76,22 +139,21 @@ python -c "import torch; print(torch.cuda.is_available(), torch.cuda.get_device_
 
 ```
 face-profiler/
-├── images/                 # Default image folder
-├── mivolo/                 # MiVOLO package (cloned from GitHub)
-├── face_profiler.py        # GUI application
+├── face_profiler/              # Python package
+│   ├── __init__.py             # Public API (FaceProfiler)
+│   ├── __main__.py             # CLI entry point
+│   ├── core.py                 # FaceProfiler class
+│   ├── models.py               # Model loading and prediction
+│   ├── detection.py            # Face detection and cropping
+│   ├── constants.py            # Labels, thresholds, age ranges
+│   ├── rendering.py            # Annotated image rendering
+│   └── gui.py                  # Tkinter GUI demo
+├── mivolo/                     # MiVOLO package (cloned from GitHub)
+├── images/                     # Default image folder
+├── pyproject.toml              # Packaging config
 ├── requirements.txt
 └── README.md
 ```
-
-## Usage
-
-```shell
-python face_profiler.py
-```
-
-- **RANDOM IMAGE** — picks a random image from the current folder and analyzes it
-- **PICK IMAGE** — opens a file picker to select any image from anywhere on disk
-- **CHANGE FOLDER** — switch the image folder (default is `images/`)
 
 ## Model stack
 
