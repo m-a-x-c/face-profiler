@@ -7,8 +7,18 @@ Face detection and demographic analysis (age, gender, race) using MiVOLO v2 + Fa
 ## Quick start
 
 ```shell
-pip install -e .
+git clone https://github.com/m-a-x-c/face-profiler.git
+cd face-profiler
+pip install .          # installs all dependencies automatically
 ```
+
+For **GPU acceleration** (recommended), install PyTorch with CUDA separately:
+
+```shell
+pip install --force-reinstall torch torchvision --index-url https://download.pytorch.org/whl/cu128
+```
+
+Models (~500MB total) are downloaded automatically on first run and cached locally.
 
 ### Python library
 
@@ -68,64 +78,7 @@ face-profiler --gui
 - **PICK IMAGE** — opens a file picker to select any image from anywhere on disk
 - **CHANGE FOLDER** — switch the image folder (default is `images/`)
 
-## Setup
-
-### 1. Create a virtual environment
-
-```shell
-python -m venv venv
-```
-
-Activate it:
-
-```shell
-# Windows (PowerShell)
-.\venv\Scripts\Activate.ps1
-
-# Windows (CMD)
-venv\Scripts\activate.bat
-
-# Linux / macOS
-source venv/bin/activate
-```
-
-### 2. Install
-
-```shell
-pip install -e .
-```
-
-Or install dependencies manually:
-
-```shell
-pip install -r requirements.txt
-```
-
-**Important:** MiVOLO requires `timm==0.8.13.dev0` specifically. Newer versions will not work.
-
-### 3. Clone MiVOLO (only if `mivolo/` folder is missing)
-
-The `mivolo/` package is included in this repo. This step is only needed if you're setting up from scratch:
-
-```shell
-git clone --depth 1 https://github.com/WildChlamydia/MiVOLO.git mivolo_repo
-cp -r mivolo_repo/mivolo mivolo
-```
-
-On Windows (PowerShell):
-
-```powershell
-git clone --depth 1 https://github.com/WildChlamydia/MiVOLO.git mivolo_repo
-Copy-Item -Recurse mivolo_repo\mivolo mivolo
-```
-
-### 4. GPU support (recommended)
-
-Install PyTorch with CUDA. For CUDA 12.8:
-
-```shell
-pip install --force-reinstall torch torchvision --index-url https://download.pytorch.org/whl/cu128
-```
+## GPU support (recommended)
 
 For other CUDA versions, see https://pytorch.org/get-started/locally/
 
